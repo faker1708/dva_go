@@ -450,8 +450,8 @@ class dva_go():
         
 
 
-        bgc = (255,255,255)
-        # bgc = (0,0,0)
+        # bgc = (255,255,255)
+        bgc = (0,0,0)
         fgc = (255-bgc[0],255-bgc[1],255-bgc[2])
 
         road_width = self.screen_x/(matrix[0]+1)
@@ -482,7 +482,7 @@ class dva_go():
 
         pre_go = [-2,-2]  # 预览棋子
 
-        self.protect_go = -1        # 注意，落子之后 ，要把这个子标记为 protect_go
+        self.protect_go = -1
 
         while(1):
             
@@ -554,13 +554,13 @@ class dva_go():
                         # pos = (go_x*road_width+road_width,go_y*road_height+road_height)
                         # radius = (road_width+road_height)/2/4  # 半径   # 棋子 视觉 大小
                         pygame.draw.circle(self.screen, bgc, pos, go_radius, width=0)
-                        pygame.draw.circle(self.screen, fgc, pos, go_radius, width=4)
+                        pygame.draw.circle(self.screen, fgc, pos, go_radius, width=8)
 
 
                 # print(pre_go)
                 s_pos = self.matrix_to_screen(pre_go)
                 pygame.draw.circle(self.screen, bgc, s_pos, go_radius, width=0)
-                pygame.draw.circle(self.screen, fgc, s_pos, go_radius, width=4)
+                pygame.draw.circle(self.screen, fgc, s_pos, go_radius, width=8)
 
 
 
@@ -586,14 +586,14 @@ class dva_go():
                         pos_1d = self.encode_pos(put_go)
 
                         eb = event.button
-                        # print(eb)
+                        print(eb)
 
                         if(eb==1):
-                            # print('左键抬起')
+                            print('左键抬起')
                             flag = 1
                         elif(eb==3):
                             flag = 2
-                            # print('右键抬起')
+                            print('右键抬起')
                         elif(eb==2):
                             flag =0
 
@@ -611,7 +611,7 @@ class dva_go():
 
                     
 
-                # time.sleep(0.01)  # 显卡占用率高，画面卡顿，只能选一个，愚蠢的pygame
+                time.sleep(0.1)
             # render end
 
             
