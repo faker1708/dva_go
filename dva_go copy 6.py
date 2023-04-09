@@ -32,102 +32,32 @@ class uf_set():
 
 class dva_go():
 
+    def pick_down(self,pos_2d):
+        new_pos_1d
+        plate[new_pos_1d]=go_cut[i][2]
 
-    def encode_pos(self,pos_2d):
-        matrix = self.matrix
-        x = pos_2d[0]
-        y = pos_2d[1]
-        mx = self.matrix[0] # 矩阵的列数
+    def read_cut(self,go_cut,i):
+        # 读棋谱
+        if(i<=len(go_cut)-1):
+            go_x = go_cut[i][0]
+            go_y = go_cut[i][1]
+            new_pos_1d = go_y*matrix[0]+go_x
 
-        pos_1d = y*mx+x
-        return pos_1d
-
-    def decode_pos(self,pos_1d):
-        mx = self.matrix[0] # 矩阵的列数 一行能放几个子
-        go_y = pos_1d // mx
-        go_x = pos_1d % mx
-        pos_2d = [go_x,go_y]
-        return pos_2d
-
-    def update_block(self):
-
-        plate = self.plate
-        # 遍历棋盘，如果某个棋子与它左或上方的棋子同阵营，则并。
-        ufs = self.ufs
-        for pos_1d,flag in enumerate(plate):
-            pos_2d = self.decode_pos(pos_1d)
-            pos_x = pos_2d[0]
-            pos_y = pos_2d[1]
-
-            # print(pos_2d)
-            # flag = 
-            # print(flag)
-            if(flag):   # 这个 位置有子
-                # 看它左边上边是否是边界
-
-                up_pos_x = pos_x 
-                up_pos_y = pos_y-1
-                if(up_pos_y>=0):
-                    up_pos_2d = [up_pos_x,up_pos_y]
-                    up_pos_1d = self.encode_pos(up_pos_2d)
-                    up_flag = plate[up_pos_1d]
-                    if(up_flag==flag ):
-                        self.ufs.unite(pos_1d,up_pos_1d)
-
-
-                left_pos_x = pos_x -1   # 向左
-                left_pos_y = pos_y      # 不变
-                if(left_pos_x >= 0 ):
-                    # 左边不是边界
-                    left_pos_2d = [ left_pos_x  ,left_pos_y  ]
-                    left_pos_1d = self.encode_pos(left_pos_2d)
-                    left_flag = plate[left_pos_1d]
-                    if(left_flag == flag):
-                        # 左边的子同阵营
-                        self.ufs.unite(pos_1d,left_pos_1d)
-
-
-        print(self.ufs.set)
-
-    def pick_down(self,pos_3d):
-        pos_2d = pos_3d[0:2]
-        flag = pos_3d[2]
-        pos_1d = self.encode_pos(pos_2d)
-        self.plate[pos_1d] = flag
-
-        print('pos_1d',pos_1d)
-        self.update_block()
-        # plate[new_pos_1d]=go_cut[i][2]
-
-    # def read_cut(self,go_cut,i):
-    #     # 读棋谱
-    #     if(i<=len(go_cut)-1):
-    #         go_x = go_cut[i][0]
-    #         go_y = go_cut[i][1]
-    #         new_pos_1d = go_y*matrix[0]+go_x
-
-    #     self.new_pos_1d = new_pos_1d
+        self.new_pos_1d = new_pos_1d
         
-        # flag = go_cut[i][2]
-        # pos_2d  = [new_pos_1d,flag]
-        # return xx
-
-
-    def qi_count(self,pos_1d):
-        
+        flag = go_cut[i][2]
+        pos_2d  = [new_pos_1d,flag]
+        return xx
     
     def pick_up(self):
         # print(self.plate)
-        # print(self.new_pos_1d)
+        print(self.new_pos_1d)
 
-        # 遍历每个块，把每块中的每个子的空邻居列在一个表里。
-        ufs= self.usf
-        plate = self.plate
-        for pos_1d,block_1d in enumerate(ufs.set):
-            flag = plate[pos_1d]
-            if(flag):#如果有子
+        # 遍历棋盘，如果某个棋子与它左或上方的棋子同阵营，则并。
+        uf = self.uf
+        for i,ele in enumerate(self.plate):
 
-
+            uf.unite(go_a,go_b)
 
 
         return
@@ -136,7 +66,7 @@ class dva_go():
 
 
         # 显示画面
-        self.show_game = 0
+        self.show_game = 1
 
         # 画布大小
         self.world_x = 1920*0.7
@@ -145,8 +75,7 @@ class dva_go():
         # self.world_x = 2**10
         # self.world_y = 2**10
 
-        matrix = [16,9] # 列数，行数
-        self.matrix = matrix
+        matrix = [16,9]
 
         self.plate = list()
         plate_len = matrix[0]*matrix[1]
@@ -154,11 +83,11 @@ class dva_go():
             self.plate.append(0)
 
         
-        self.ufs= uf_set(len(self.plate)) # 建立一个并查集    用来记录哪些棋子连成了一片
+        uf= uf_set(len(self.plate)) # 建立一个并查集    用来记录哪些棋子连成了一片
 
         
-        # bgc = (255,255,255)
-        bgc = (0,0,0)
+        bgc = (255,255,255)
+        # bgc = (0,0,0)
         fgc = (255-bgc[0],255-bgc[1],255-bgc[2])
 
         road_width = self.world_x/(matrix[0]+1)
@@ -188,21 +117,15 @@ class dva_go():
         episode = 0
 
         # 棋谱 x坐标 y坐标 第三个数表示 黑白
-        # go_cut = [[1,0,1],[2,0,1],[0,1,1],[3,1,1],[1,2,1],[2,2,1],
-        #           [1,1,2],[2,1,2]]
-
-
-        go_cut = [[1,0,2],[2,0,2],[0,1,2],[3,1,2],[1,2,2,],[3,2,2],[2,3,2],
-                  [1,1,1],[2,1,1],[2,2,1]]
+        go_cut = [[1,0,1],[2,0,1],[0,1,1],[3,1,1],[1,2,1],[2,2,1],
+                  [1,1,2],[2,1,2]]
         while(1):
             # random_plate_pos = random.randint(0,plate_len-1)
             # plate[random_plate_pos]=random.randint(0,2)
             
             # 落子，流式输入
-            if(episode<=len(go_cut)-1):
-                pos_3d = go_cut[episode]
-            else:
-                pos_3d = [0,0,0]
+
+            pos_3d = self.read_cut(go_cut,episode)  # xy坐标 阵营
             self.pick_down(pos_3d)
 
 
@@ -215,7 +138,7 @@ class dva_go():
 
             if(self.show_game):
                 self.screen.fill(bgc)
-                plate = self.plate
+
 
                 for j in range(0,2):
                     for i in range(matrix[j]):
