@@ -4,7 +4,7 @@ import time
 import random
 
 import math
-
+import copy
 
 class uf_set():
     # 尽量写成流式，而不要直接用固定的数组。
@@ -363,7 +363,7 @@ class dva_go():
         if(flag==0):
             flag = random.randint(1,2)
             self.plate[pos_1d]=flag
-
+        self.protect_go = pos_1d
 
     def matrix_to_screen(self,m_pos):
         go_x = m_pos[0]
@@ -448,6 +448,7 @@ class dva_go():
         self.ufs= uf_set(len(self.plate)) # 建立一个并查集    用来记录哪些棋子连成了一片
 
         
+        fill_color = (255,255,64)
 
 
         bgc = (255,255,255)
@@ -482,11 +483,13 @@ class dva_go():
 
         pre_go = [-2,-2]  # 预览棋子
 
+
+
         self.protect_go = -1        # 注意，落子之后 ，要把这个子标记为 protect_go
 
         while(1):
             
-            # self.random_pick_down()
+            self.random_pick_down()
 
 
             # self.plate = plate
@@ -495,11 +498,19 @@ class dva_go():
             # print(plate)
 
 
+
+
             # render
             if(self.show_game):
-                self.screen.fill(bgc)
+                
+                # mv=[plate,pre_go]
+                
+                # change = self.compare(old_mv,mv)
+
                 plate = self.plate
 
+                
+                self.screen.fill(fill_color)
                 for j in range(0,2):
                     for i in range(matrix[j]):
                         
@@ -554,13 +565,13 @@ class dva_go():
                         # pos = (go_x*road_width+road_width,go_y*road_height+road_height)
                         # radius = (road_width+road_height)/2/4  # 半径   # 棋子 视觉 大小
                         pygame.draw.circle(self.screen, bgc, pos, go_radius, width=0)
-                        pygame.draw.circle(self.screen, fgc, pos, go_radius, width=4)
+                        pygame.draw.circle(self.screen, fgc, pos, go_radius, width=3)
 
 
                 # print(pre_go)
                 s_pos = self.matrix_to_screen(pre_go)
-                pygame.draw.circle(self.screen, bgc, s_pos, go_radius, width=0)
-                pygame.draw.circle(self.screen, fgc, s_pos, go_radius, width=4)
+                pygame.draw.circle(self.screen, 'gray', s_pos, go_radius, width=0)
+                # pygame.draw.circle(self.screen, fgc, s_pos, go_radius, width=3)
 
 
 
@@ -611,7 +622,8 @@ class dva_go():
 
                     
 
-                # time.sleep(0.01)  # 显卡占用率高，画面卡顿，只能选一个，愚蠢的pygame
+                # time.sleep(0.1)  # 显卡占用率高，画面卡顿，只能选一个，愚蠢的pygame
+                time.sleep(0.001*0.001)  # 显卡占用率高，画面卡顿，只能选一个，愚蠢的pygame
             # render end
 
             
