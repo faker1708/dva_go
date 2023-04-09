@@ -3,8 +3,6 @@ import pygame
 import time
 import random
 
-import math
-
 
 class uf_set():
     # 尽量写成流式，而不要直接用固定的数组。
@@ -210,6 +208,8 @@ class dva_go():
                     if(neighbor_flag ==0 ):
                         blank_neighbor_set.add(neighbor_1d)
 
+                        if(neighbor_1d in [18,34]):
+                            print('blank_neighbor_of_one_go !!!!!!!!!',pos_1d)
         return blank_neighbor_set
 
 
@@ -235,6 +235,7 @@ class dva_go():
     def pick_up(self):
 
 
+        self.ufs.set_init()
         self.update_block()
 
         bbn = list()    # block_blank_neighbor
@@ -257,7 +258,10 @@ class dva_go():
                 bs = bs | blank_neighbor_set    # 并集
                 bbn[block_head] = bs
         
+        # print('___')
         for pos_1d,flag in enumerate(plate):
+        # for pos_1d,block_1d in enumerate(ufs.set):
+            # flag = plate[pos_1d]
             if(flag):#如果有子
                 
                 block_head = ufs.find(pos_1d)
@@ -276,6 +280,8 @@ class dva_go():
                 # print(self.decode_pos(pos_1d),qi_count)
 
                 if(qi_count==0):
+                    # print('\a')
+                    # time.sleep(2)
                     plate[pos_1d]=0
 
 
@@ -301,61 +307,6 @@ class dva_go():
             self.plate[pos_1d]=flag
 
 
-    def matrix_to_screen(self,m_pos):
-        go_x = m_pos[0]
-        go_y = m_pos[1]
-
-        
-        scx = self.screen_x
-        scy = self.screen_y
-
-
-        matrix = self.matrix
-        mxo = matrix[0]+1
-        myo = matrix[1]+1
-
-        road_width = scx/mxo # 每条路的宽度
-        road_height = scy/myo
-
-
-        
-        s_pos = (go_x*road_width+road_width,go_y*road_height+road_height)
-
-        return s_pos
-
-    def screen_to_matrix(self,s_pos):
-        # 将画布坐标转成棋盘坐标
-        sx = s_pos[0]
-        sy = s_pos[1]
-
-        scx = self.screen_x
-        scy = self.screen_y
-
-        # # 百分比
-        # px = sx/
-        # py = sy/self.screen_y
-
-        matrix = self.matrix
-        mxo = matrix[0]+1
-        myo = matrix[1]+1
-
-        rw = scx/mxo # 每条路的宽度
-        rh = scy/myo
-
-        sox = sx-rw # 偏移后的当前位置的屏幕坐标
-        soy = sy-rw        
-
-        kkx = sox/rw +0.5
-        kx = math.floor(kkx)
-
-        kky = soy/rh +0.5
-        ky = math.floor(kky)
-
-        # print('坐标',kx,ky)    # 矩阵坐标
-        return [kx,ky]
-
-
-
     def __init__(self,show_game):
 
 
@@ -363,14 +314,13 @@ class dva_go():
         self.show_game = show_game
 
         # 画布大小
-        # self.screen_x = 1920*0.7
-        self.screen_x = 1080*0.9
-        self.screen_y = 1080*0.9
+        self.world_x = 1920*0.7
+        self.world_y = 1080*0.7
 
-        # self.screen_x = 2**10
-        # self.screen_y = 2**10
+        # self.world_x = 2**10
+        # self.world_y = 2**10
 
-        matrix = [19,19] # 列数，行数
+        matrix = [16,9] # 列数，行数
         self.matrix = matrix
 
         self.plate = list()
@@ -390,8 +340,8 @@ class dva_go():
         bgc = (0,0,0)
         fgc = (255-bgc[0],255-bgc[1],255-bgc[2])
 
-        road_width = self.screen_x/(matrix[0]+1)
-        road_height = self.screen_y/(matrix[1]+1)
+        road_width = self.world_x/(matrix[0]+1)
+        road_height = self.world_y/(matrix[1]+1)
         
 
         # road_width = 40
@@ -401,27 +351,25 @@ class dva_go():
             #使用pygame之前必须初始化
             pygame.init()
             #设置主屏窗口 ；设置全屏格式：flags=pygame.FULLSCREEN
-            self.screen = pygame.display.set_mode((self.screen_x,self.screen_y))
+            self.screen = pygame.display.set_mode((self.world_x,self.world_y))
             #设置窗口标题
             pygame.display.set_caption('dva_go')
 
-            # self.Cell = [1,1]
-            # self.Cell[0] = 10
-            # self.Cell[1] = 10
+            self.Cell = [1,1]
+            self.Cell[0] = 10
+            self.Cell[1] = 10
 
-            # self.Size = [33,44]
-            # # self.draw_axes()
+            self.Size = [33,44]
+            # self.draw_axes()
         
             font = pygame.font.Font(None, 20)
         
         episode = 0
 
-        pre_go = [-2,-2]  # 预览棋子
-
 
         while(1):
             
-            # self.random_pick_down()
+            self.random_pick_down()
 
 
             # self.plate = plate
@@ -463,8 +411,6 @@ class dva_go():
 
 
 
-
-
                 for kk ,ele in enumerate(plate):
                     # 画棋子
                     # 棋子在棋盘上的坐标
@@ -492,57 +438,22 @@ class dva_go():
                         pygame.draw.circle(self.screen, fgc, pos, go_radius, width=8)
 
 
-                # print(pre_go)
-                s_pos = self.matrix_to_screen(pre_go)
-                pygame.draw.circle(self.screen, bgc, s_pos, go_radius, width=0)
-                pygame.draw.circle(self.screen, fgc, s_pos, go_radius, width=8)
+                pygame.display.flip() #更新屏幕内容
 
-
-
-                # for event in pygame.event.get():
-                    
 
                 for event in pygame.event.get():    # 关闭游戏
                     if event.type == pygame.QUIT:
                         pygame.quit()
                         exit()
-
-                    if event.type == pygame.MOUSEMOTION:
-
-                    # print(event.pos) # 查看移动的坐标
-                        pre_go = self.screen_to_matrix(event.pos)
-
-                        pass
                     
-                    if event.type == pygame.MOUSEBUTTONUP:
-                        e_pos = event.pos
-                        put_go = self.screen_to_matrix(e_pos)
-                        # flag = 2
-                        pos_1d = self.encode_pos(put_go)
-
-                        eb = event.button
-                        print(eb)
-
-                        if(eb==1):
-                            print('左键抬起')
-                            flag = 1
-                        elif(eb==3):
-                            flag = 2
-                            print('右键抬起')
-                        elif(eb==2):
-                            flag =0
-
-                        plate[pos_1d] = flag
-
-
-
-                pygame.display.flip() #更新屏幕内容
-
+                    
                     # event.type == pygame.MOUSEBUTTONDOWN
                     # 鼠标弹起
                     # event.type == pygame.MOUSEBUTTONUP
 
-                    
+                    if event.type == pygame.MOUSEBUTTONUP:
+                        #     print("移动")
+                        print(event.pos) # 查看移动的坐标
 
                 time.sleep(0.1)
             # render end

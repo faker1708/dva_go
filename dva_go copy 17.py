@@ -363,14 +363,13 @@ class dva_go():
         self.show_game = show_game
 
         # 画布大小
-        # self.screen_x = 1920*0.7
-        self.screen_x = 1080*0.9
-        self.screen_y = 1080*0.9
+        self.screen_x = 1920*0.7
+        self.screen_y = 1080*0.7
 
         # self.screen_x = 2**10
         # self.screen_y = 2**10
 
-        matrix = [19,19] # 列数，行数
+        matrix = [16,9] # 列数，行数
         self.matrix = matrix
 
         self.plate = list()
@@ -405,18 +404,18 @@ class dva_go():
             #设置窗口标题
             pygame.display.set_caption('dva_go')
 
-            # self.Cell = [1,1]
-            # self.Cell[0] = 10
-            # self.Cell[1] = 10
+            self.Cell = [1,1]
+            self.Cell[0] = 10
+            self.Cell[1] = 10
 
-            # self.Size = [33,44]
-            # # self.draw_axes()
+            self.Size = [33,44]
+            # self.draw_axes()
         
             font = pygame.font.Font(None, 20)
         
         episode = 0
 
-        pre_go = [-2,-2]  # 预览棋子
+        pre_go = [0,0]  # 预览棋子
 
 
         while(1):
@@ -514,27 +513,7 @@ class dva_go():
 
                         pass
                     
-                    if event.type == pygame.MOUSEBUTTONUP:
-                        e_pos = event.pos
-                        put_go = self.screen_to_matrix(e_pos)
-                        # flag = 2
-                        pos_1d = self.encode_pos(put_go)
-
-                        eb = event.button
-                        print(eb)
-
-                        if(eb==1):
-                            print('左键抬起')
-                            flag = 1
-                        elif(eb==3):
-                            flag = 2
-                            print('右键抬起')
-                        elif(eb==2):
-                            flag =0
-
-                        plate[pos_1d] = flag
-
-
+                    
 
                 pygame.display.flip() #更新屏幕内容
 
@@ -542,6 +521,8 @@ class dva_go():
                     # 鼠标弹起
                     # event.type == pygame.MOUSEBUTTONUP
 
+                    # if event.type == pygame.MOUSEBUTTONUP:
+                        #     print("移动")
                     
 
                 time.sleep(0.1)
