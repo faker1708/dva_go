@@ -1,7 +1,12 @@
-import default_client
-# import queue
 
-import dva_l_queue
+# 这个是纯后端文件
+
+# 只定义棋盘，不定义围棋规则
+
+
+class default_client():
+
+
 
 class dva_go():
 
@@ -12,34 +17,14 @@ class dva_go():
         game.plate_len = game.colunmn_quantity* game.row_quantity
         
         blank_flag = -1
-        for _ in range(game.plate_len):
+        for i in range(game.plate_len):
             plate.append(blank_flag)
 
-
-        len = game.flag_quantity*1
-        game.patient = dva_l_queue.dva_l_queue(len,1)    #如果连续地虚着，这个队列会全为0，此时游戏结束 
-        # for _ in range(game.flag_quantity*1):
-        #     patient.put(1)   # 初始化为全1
-        # game.patient = patient
-        
-
-
-        game.plate = plate
-
-    def next_flag(game):
-
-
-        # 换下一个人
-
-        now_flag = game.new_go_flag
-        total_flag = game.flag_quantity
-        next_flag = (now_flag+1)% total_flag
-        game.new_go_flag = next_flag
-        return 0
+        game.plate =plate
 
     def put_down(game):
         # 落子 提子 判断终局
-        # print('putdown',game.new_pos_1d,game.new_go_flag)
+        print('putdown',game.new_pos_1d,game.new_go_flag)
 
 
 
@@ -52,6 +37,12 @@ class dva_go():
             game.plate[pos] = flag
         # 否则 是虚着，直接跳到下一个人走
 
+        # 换下一个人
+
+        now_flag = game.new_go_flag
+        total_flag = game.flag_quantity
+        next_flag = (now_flag+1)% total_flag
+        game.new_go_flag = next_flag
         return 0
     
     def put_down_go(game):
@@ -73,24 +64,18 @@ class dva_go():
         that_flag = game.plate[pos]
         legal = 1
 
-        # print('that_flag',that_flag)
+        print('that_flag',that_flag)
         if(that_flag >=0 ):
             legal = 0
         else:
             # 判断弱规则，其它规则
             pass
 
-        # print('le',legal)
+        print('le',legal)
         return legal
 
-    def is_terminal(game):
-        xx = game.patient.sum()
-        out = 0
-        if(xx == 0):
-            out =1
-        return out
 
-    # 外部接口，内部不使用 client
+    # 外部接口，内部不使用
     def set_new_go(game,pos):
         game.new_pos_1d = pos
 
@@ -98,37 +83,26 @@ class dva_go():
         return 0        
 
     def run(game):
-        if(hasattr(list, 'client')):
-            client = game.client
-        else:
-            client = default_client.default_client()
-        client.game = game
+        client = game.client
         while(1):
             # game.get_a_go(pos_1d,flag)
             
             client.in_put()    # 流式输入一个棋子 格式 [pos_1d,flag] 一维的
             legal = game.__obejective_censor()
+            # client.send(legal)
             if(legal):
                 # 如果客观审查通过
-                # terminal = 
-                game.put_down()  # 把它放到棋盘上。-1 是虚着，判断终局的逻辑也在里面
+                terminal = game.put_down()  # 把它放到棋盘上。-1 是虚着，判断终局的逻辑也在里面
                 
+
+                # client.get_view_model(game)
 
                 # 画面刷新
                 client.show()
 
-                # if(terminal):
-                #     break
-            # 不合法的落子判断为虚着
-            # game.patient.get()
-            game.patient.put(legal)
-            if(game.is_terminal()):
-                break
+                if(terminal):
+                    break
             
-
-            game.next_flag()
-        game.liquidate()    # 清算
-        
         
     # gym的逻辑 rest state = step(action) 
 
@@ -140,7 +114,7 @@ class dva_go():
 
 
         game.new_go_flag = 0
-        game.flag_quantity = 2  # 一共有几个阵营？
+        game.flag_quantity = 3  # 一共有几个阵营？
         # plate= list()
 
 
