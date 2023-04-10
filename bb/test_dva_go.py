@@ -1,7 +1,7 @@
 
 
 
-import pygame_front
+import dva_go_front_pygame
 import dva_go
 
 
@@ -13,9 +13,9 @@ class test_dva_go():
         dg = dva_go()
 
         if(show_game):
-
+            gf = 
         else:
-            
+
         return
     
 

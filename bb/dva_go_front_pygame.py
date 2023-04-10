@@ -9,5 +9,4 @@ import pygame
 
 
 class dva_go_front_pygame():
-
     
