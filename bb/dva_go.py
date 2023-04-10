@@ -39,13 +39,13 @@ class dva_go():
 
     def put_down(game):
         # 落子 提子 判断终局
-        # print('putdown',game.new_pos_1d,game.new_go_flag)
+        # print('putdown',game.__new_pos_1d,game.new_go_flag)
 
 
 
         
         flag = game.new_go_flag
-        pos = game.new_pos_1d
+        pos = game.__new_pos_1d
 
 
         if(pos>=0):
@@ -56,14 +56,14 @@ class dva_go():
     
     def put_down_go(game):
         flag = game.new_go_flag
-        pos = game.new_pos_1d
+        pos = game.__new_pos_1d
 
         game.plate[pos] = flag
         return 0
 
     def __obejective_censor(game):
         flag = game.new_go_flag
-        pos = game.new_pos_1d
+        pos = game.__new_pos_1d
 
         # 有子，则不可落
         # 棋局循环，则不可落。这个有点复杂，暂时只用双方单争劫。
@@ -83,7 +83,7 @@ class dva_go():
         # print('le',legal)
         return legal
 
-    def is_terminal(game):
+    def __is_terminal(game):
         xx = game.patient.sum()
         out = 0
         if(xx == 0):
@@ -92,10 +92,14 @@ class dva_go():
 
     # 外部接口，内部不使用 client
     def set_new_go(game,pos):
-        game.new_pos_1d = pos
+        game.__new_pos_1d = pos
 
 
         return 0        
+
+    def __liquidate(game):
+        game.client.win()
+        return 
 
     def run(game):
         if(hasattr(list, 'client')):
@@ -103,6 +107,7 @@ class dva_go():
         else:
             client = default_client.default_client()
         client.game = game
+        game.client = client
         while(1):
             # game.get_a_go(pos_1d,flag)
             
@@ -122,12 +127,12 @@ class dva_go():
             # 不合法的落子判断为虚着
             # game.patient.get()
             game.patient.put(legal)
-            if(game.is_terminal()):
+            if(game.__is_terminal()):
                 break
             
 
             game.next_flag()
-        game.liquidate()    # 清算
+        game.__liquidate()    # 清算
         
         
     # gym的逻辑 rest state = step(action) 
