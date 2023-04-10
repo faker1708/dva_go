@@ -53,3 +53,11 @@ dva_go copy 17
 
 完成了打劫的逻辑
 dva_go copy 19
+
+
+学习别人
+
+gnugo
+gtp
+
+
