@@ -840,46 +840,13 @@ class dva_go():
         return out
 
 
-    def fm(self,mode):
-        # mode 0 train
-        # 1 test
-        # 2 show
-
-
-    def train(self):
-        self.fm(0)
-        # self.show_game = 0  # 显示画面
-        # train_quantity = 2**10  # 训练量
-
-
-
-    def main(self):
-        # 全局常量
-        self.battale_mode = 0
-        self.matrix = [9,9] # 列数，行数
-        self.tie_mu = 0.5
-
-
-        while(1):
-            self.train()
-            # result = self.test()
-            # if(result)
-
-            self.show()
-
-        return
-
     def __init__(self):
-        self.main()
-
-        return
-    def __initddd__(self):
 
 
 
         
-        self.show_game = 0  # 显示画面
-        battale_mode = 0   # 0 机机 1 人机 2 人人 3 打谱（左黑 右白 中删除）
+        self.show_game = 1  # 显示画面
+        battale_mode = 1   # 0 机机 1 人机 2 人人 3 打谱（左黑 右白 中删除）
 
         matrix = [9,9] # 列数，行数
 
@@ -1038,7 +1005,7 @@ class dva_go():
 
 
                         pygame.display.flip() #更新屏幕内容
-                        time.sleep(3)
+                        time.sleep(7)
                         break
 
                     # 画预览棋子

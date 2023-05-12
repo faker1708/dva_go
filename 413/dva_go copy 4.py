@@ -840,40 +840,7 @@ class dva_go():
         return out
 
 
-    def fm(self,mode):
-        # mode 0 train
-        # 1 test
-        # 2 show
-
-
-    def train(self):
-        self.fm(0)
-        # self.show_game = 0  # 显示画面
-        # train_quantity = 2**10  # 训练量
-
-
-
-    def main(self):
-        # 全局常量
-        self.battale_mode = 0
-        self.matrix = [9,9] # 列数，行数
-        self.tie_mu = 0.5
-
-
-        while(1):
-            self.train()
-            # result = self.test()
-            # if(result)
-
-            self.show()
-
-        return
-
     def __init__(self):
-        self.main()
-
-        return
-    def __initddd__(self):
 
 
 
